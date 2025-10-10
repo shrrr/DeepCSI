@@ -1,13 +1,13 @@
 # DeepCSI
 
-DeepCSI 是一种基于对比源神经重参数化的二维电磁逆散射方法, 这是一种无需训练的逐案例反演方法, 其训练过程即为反演过程。
+DeepCSI 是一种基于对比源神经重参数化的端到端可微二维电磁逆散射方法, 其摆脱了大规模离线训练的依赖, 实现了无需训练的逐案例反演, 其反演过程与优化过程高度统一。
 
 ## 目录结构
 
 ```
 DeepCSI/
 ├── data/                 # 示例数据与 Fresnel 实验数据（.exp）
-├── deepcsi/              # 核心 Python 包
+├── src/              # 核心 Python 包
 │   ├── __init__.py
 │   ├── main.py           # CLI 入口（原 run_scripts_multifreq.sh 对应）
 │   ├── generate_measurement.py  # 生成合成散射场
@@ -44,8 +44,8 @@ bash run_multifreq.sh
 ```
 
 脚本会读取 `data/testcases` 下的 `.npy` 作为真实介电常数，先调用
-`python -m deepcsi.generate_measurement` 生成前向散射，再运行
-`python -m deepcsi.main` 完成 `fd-isp / pdtot-isp` 反演。结果会保存到
+`python -m src.generate_measurement` 生成前向散射，再运行
+`python -m src.main` 完成 `fd-isp / pdtot-isp` 反演。结果会保存到
 `results_multifreq/` 下的对应目录（同时输出 `.npy`、`loss_history.npy` 以及可视化 PNG），并记录指标至 `results_multifreq/result.csv`。
 
 ### Fresnel 实验数据示例
@@ -65,7 +65,7 @@ bash run_fresnel.sh
 可以直接使用 Python 模块运行，传入任意参数组合：
 
 ```bash
-python -m deepcsi.main \
+python -m src.main \
   --expname demo \
   --basedir ./results_demo \
   --params_path ./data/testcases/epsilon_austria.npy \
@@ -80,7 +80,7 @@ python -m deepcsi.main \
 如果需要生成新的测量数据，可调用：
 
 ```bash
-python -m deepcsi.generate_measurement \
+python -m src.generate_measurement \
   --params_path ./data/testcases/epsilon_austria.npy \
   --output ./data/testcases/measurement.npy \
   --freq 3,4,5,
