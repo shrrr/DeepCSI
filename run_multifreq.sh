@@ -19,7 +19,7 @@ EXP_PREFIX="simul"
 METHODS=("fd-isp" "pdtot-isp")
 
 for case in "${CASES[@]}"; do
-  "$PYTHON_BIN" -m deepcsi.generate_measurement \
+  "$PYTHON_BIN" -m src.generate_measurement \
     --expname "measurement" \
     --basedir "$TMP_DIR" \
     --params_path "$DATA_DIR/${case}.npy" \
@@ -32,7 +32,7 @@ for case in "${CASES[@]}"; do
 
   for method in "${METHODS[@]}"; do
     EXP_NAME="${EXP_PREFIX}_${case}_${method}"
-    "$PYTHON_BIN" -m deepcsi.main \
+    "$PYTHON_BIN" -m src.main \
       --expname "$EXP_NAME" \
       --basedir "$RESULTS_DIR" \
       --params_path "$DATA_DIR/${case}.npy" \

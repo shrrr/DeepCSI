@@ -19,7 +19,7 @@ for case in "${CASES[@]}"; do
   REC_PATH="$DATA_DIR/${case}.exp"
   for method in "${METHODS[@]}"; do
     EXP_NAME="fresnel_${case}_${method}"
-    "$PYTHON_BIN" -m deepcsi.main \
+    "$PYTHON_BIN" -m src.main \
       --expname "$EXP_NAME" \
       --basedir "$RESULTS_DIR" \
       --params_path "$DATA_DIR/${case}.npy" \

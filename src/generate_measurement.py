@@ -13,7 +13,7 @@ try:
         ROOT = Path(__file__).resolve().parents[1]
         if str(ROOT) not in sys.path:
             sys.path.insert(0, str(ROOT))
-        from deepcsi.trainer import InverseScatteringTrainer, TrainerConfig
+        from src.trainer import InverseScatteringTrainer, TrainerConfig
     else:
         from .trainer import InverseScatteringTrainer, TrainerConfig
 except ImportError as exc:  # pragma: no cover - defensive branch
