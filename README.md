@@ -46,7 +46,7 @@ bash run_multifreq.sh
 脚本会读取 `data/testcases` 下的 `.npy` 作为真实介电常数，先调用
 `python -m src.generate_measurement` 生成前向散射，再运行
 `python -m src.main` 完成 `fd-isp / pdtot-isp` 反演。结果会保存到
-`results_multifreq/` 下的对应目录（同时输出 `.npy`、`loss_history.npy` 以及可视化 PNG），并记录指标至 `results_multifreq/result.csv`。
+`results_multifreq/` 下的对应目录（同时输出 `.npy`、`loss_history.npy` 以及可视化 PNG），并记录指标至 `result.csv`。
 
 ### Fresnel 实验数据示例
 
@@ -60,7 +60,7 @@ bash run_fresnel.sh
 脚本会针对指定实验 (`FoamDielExtTM` 等) 调用 `main.py` 完成反演，并记录指标至
 `results_fresnel/result.csv`。
 
-### 自定义 CLI
+### 自定义运行入口
 
 可以直接使用 Python 模块运行，传入任意参数组合：
 
