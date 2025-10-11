@@ -7,8 +7,10 @@ DeepCSI 是一种基于对比源神经重参数化的端到端可微二维电磁
 ```
 DeepCSI/
 ├── data/                 # 示例数据与 Fresnel 实验数据（.exp）
+├── docs/                 # 反演结果图片示例
 ├── src/                  # 核心 Python 包
 │   ├── __init__.py
+│   ├── __main__.py
 │   ├── main.py           # 主函数入口
 │   ├── generate_measurement.py  # 生成合成散射场
 │   ├── models.py         # NeJF 网络与位置编码
@@ -22,7 +24,7 @@ DeepCSI/
 ## 环境依赖
 
 - Python ≥ 3.9
-- PyTorch ≥ 1.12（推荐使用 GPU，如无 GPU 将自动退回 CPU 浮点）
+- PyTorch ≥ 2.0（推荐使用 GPU，如无 GPU 将自动退回 CPU 浮点）
 - NumPy, Matplotlib, tqdm
 - 可选：`scipy`（用于 Fresnel 数据的 `.mat` 校准文件）
 
