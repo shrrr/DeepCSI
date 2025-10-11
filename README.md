@@ -7,9 +7,9 @@ DeepCSI 是一种基于对比源神经重参数化的端到端可微二维电磁
 ```
 DeepCSI/
 ├── data/                 # 示例数据与 Fresnel 实验数据（.exp）
-├── src/              # 核心 Python 包
+├── src/                  # 核心 Python 包
 │   ├── __init__.py
-│   ├── main.py           # CLI 入口（原 run_scripts_multifreq.sh 对应）
+│   ├── main.py           # 主函数入口
 │   ├── generate_measurement.py  # 生成合成散射场
 │   ├── models.py         # NeJF 网络与位置编码
 │   ├── trainer.py        # InverseScatteringTrainer 主体
