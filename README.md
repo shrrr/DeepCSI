@@ -95,6 +95,13 @@ python -m src.generate_measurement \
 - `testset_XXXXXX.png` 与 `testset_XXXXXX_params.png`：电流幅度及重建 `epsilon` 的可视化。
 - （可选）`result.csv`：当 `--result_file` 指定时，训练结束会写入一行指标条目。
 
+## 结果示例
+反演结果如下图所示，上下两幅子图分别为合成数据反演结果和Fresnel实测数据反演结果。
+
+![Fresnel 多目标反演示例](docs/FresnelMulti.png)
+
+![多频反演示例](docs/MultiFreqInv.png)
+
 ## 文献引用
 ```bibtex
 @article{sun2025physics,
