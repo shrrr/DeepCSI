@@ -11,6 +11,15 @@ import numpy as np
 import torch
 import torch.nn as nn
 
+try:
+    import mindspore
+    from mindspore import Tensor as msTensor
+    from mindspore import ops as ms_ops
+except ImportError:
+    mindspore = None
+    msTensor = None
+    ms_ops = None
+
 
 class TotalVariationL1(nn.Module):
     """Anisotropic total-variation regulariser with L1 norm."""
@@ -81,22 +90,37 @@ def epsilon_control(field: torch.Tensor, use_constraint: bool = False) -> torch.
     return field
 
 
+def _mindspore_reduce_mean(values: torch.Tensor) -> float:
+    if values.numel() == 0:
+        return 0.0
+    if mindspore is None or msTensor is None or ms_ops is None:
+        return float(values.mean().item())
+    ms_tensor = msTensor(values.detach().cpu().numpy(), dtype=mindspore.float32)
+    reduce_mean = ms_ops.ReduceMean(keep_dims=False)
+    return float(reduce_mean(ms_tensor).asnumpy().item())
+
+
 @dataclass
 class LossRecorder:
     save_dir: str
     loss_names: Iterable[str]
     history: Dict[str, List[float]] = field(init=False)
+    _mindspore_means: Dict[str, float] = field(init=False, repr=False)
 
     def __post_init__(self) -> None:
         self.save_dir = os.path.abspath(self.save_dir)
         os.makedirs(self.save_dir, exist_ok=True)
         self.loss_names = list(self.loss_names)
         self.history = {name: [] for name in self.loss_names}
+        self._mindspore_means = {name: 0.0 for name in self.loss_names}
 
     def update(self, values: Dict[str, float]) -> None:
         for name in self.loss_names:
             if name in values:
                 self.history[name].append(values[name])
+                if mindspore is not None and msTensor is not None and ms_ops is not None:
+                    torch_values = torch.tensor(self.history[name], dtype=torch.float32)
+                    self._mindspore_means[name] = _mindspore_reduce_mean(torch_values)
 
     def plot_losses(self) -> None:
         if not self.history or plt is None:
@@ -116,6 +140,9 @@ class LossRecorder:
     def save_history(self, filename: str = "loss_history.npy") -> None:
         path = os.path.join(self.save_dir, filename)
         np.save(path, self.history)
+
+    def mindspore_mean(self, name: str) -> float:
+        return self._mindspore_means.get(name, 0.0)
 
 
 def save_results_row(filepath: str, header: Iterable[str], row: Iterable) -> None:
