@@ -262,11 +262,6 @@ class InverseScatteringTrainer(nn.Module):
         self.regular_item = regularizers.get(regularizer_name, TotalVariationL1())
         last_regular_loss = 0.0
         last_fd = 1e-6 * self.cell_area ** 2
-        decay_begin = 500
-        if self.args.max_iter > decay_begin and self.args.regularizer_decay < 1.0:
-            delta_regularizer = (1 - self.args.regularizer_decay) / max(1, (self.args.max_iter - decay_begin) // 100)
-        else:
-            delta_regularizer = 0.0
 
         measurements = self._load_measurements()
         if self.args.noise_ratio > 0:
@@ -338,13 +333,11 @@ class InverseScatteringTrainer(nn.Module):
             for pg in optimizer_params.param_groups:
                 pg["lr"] = params_lr
 
-            if delta_regularizer > 0 and step > decay_begin and regularizer_name in {"tv_l1", "tv_l2"}:
-                scale = 1 - ((step - decay_begin) // 100) * delta_regularizer
-                scale = max(self.args.regularizer_decay, scale)
-                self.args.regularizer_weight = max(
-                    self.args.regularizer_decay,
-                    self.args.regularizer_weight * scale,
-                )
+            decay_begin = 500
+            delta_regularizer_weight = (1-self.args.regularizer_decay)/((self.args.max_iter-decay_begin)//100)
+            if step > decay_begin:
+                self.args.regularizer_weight = self.args.regularizer_weight * (1-(step-decay_begin)//100*delta_regularizer_weight)
+                
 
             recorder.update(
                 {
